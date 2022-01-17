@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "nunomaduro/collision": "^4.0|^5.1",
@@ -33,7 +34,10 @@
         "laravel": {
             "providers": [
                 "Userlynk\\Snowflake\\SnowflakeServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Snowflake": "Barryvdh\\Debugbar\\Facade"
+            }
         }
     },
     "config": {

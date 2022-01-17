@@ -4,6 +4,8 @@ namespace Userlynk\Snowflake;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use Userlynk\Snowflake\Connections\MySqlConnection;
+use Userlynk\Snowflake\Connections\PostgresConnection;
 
 class SnowflakeServiceProvider extends ServiceProvider
 {
@@ -12,33 +14,33 @@ class SnowflakeServiceProvider extends ServiceProvider
         if (App::runningInConsole()) {
             $this->publishConfig();
 
-            Snowflake::prepareDatabase();
-            Snowflake::registerMacros();
-            Snowflake::applyTriggers();
+            Snowflake::register();
         }
     }
 
     public function register()
     {
         $this->mergeConfig();
-    }
 
-    protected function mergeConfig()
-    {
-        $configPath = __DIR__.'/../config/snowflake.php';
-
-        $this->mergeConfigFrom($configPath, 'snowflake');
+        $this->app->singleton('snowflake', function ($app) {
+            return $app['db.connection']->getDriverName() === 'pgsql'
+                ? new PostgresConnection()
+                : new MySqlConnection();
+        });
     }
 
     protected function publishConfig()
     {
-        $configPath = __DIR__.'/../config/snowflake.php';
-
-        $this->publishes([$configPath => $this->getConfigPath()], 'config');
+        $this->publishes([
+            __DIR__.'/../config/snowflake.php' => config_path('snowflake.php'),
+        ]);
     }
 
-    protected function getConfigPath(): string
+    protected function mergeConfig()
     {
-        return config_path('snowflake.php');
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/snowflake.php',
+            'snowflake'
+        );
     }
 }
