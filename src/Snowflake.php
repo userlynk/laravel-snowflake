@@ -32,8 +32,6 @@ class Snowflake
                 our_epoch bigint := 1314220021721;
                 seq_id bigint;
                 now_millis bigint;
-                -- the id of this DB shard, must be set for each
-                -- schema shard you have - you could pass this as a parameter too
                 shard_id int := 1;
                 result bigint:= 0;
             BEGIN
@@ -105,7 +103,7 @@ class Snowflake
     }
 
     /**
-     * Apply triggers to any existing games with a "sid" column.
+     * Apply triggers to any existing tables with a "sid" column.
      *
      * @return void
      */
