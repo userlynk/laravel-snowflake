@@ -13,30 +13,16 @@ abstract class BaseConnection implements ConnectionInterface
     public function register()
     {
         $this->prepareDatabase();
-        $this->registerMacros();
+        $this->registerEvents();
+        $this->registerGrammarMacros();
+        $this->registerBlueprintMacros();
         $this->applyTriggers();
     }
 
     /**
-     * Register the snowflake macro.
-     *
      * @return void
      */
-    public function registerMacros()
-    {
-        $this->registerGrammarMacros();
-        $this->registerBlueprintMacros();
-    }
-
-    /**
-     * @return mixed
-     */
-    abstract public function registerGrammarMacros(): void;
-
-    /**
-     * @return void
-     */
-    public static function registerBlueprintMacros(): void
+    public function registerBlueprintMacros(): void
     {
         Blueprint::macro('snowflake', function ($column = 'sid') {
             $column = $this->unsignedBigInteger($column)->unique();

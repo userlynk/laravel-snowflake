@@ -16,9 +16,14 @@ class PostgresConnection extends BaseConnection
      */
     public function prepareDatabase()
     {
-        // Setup global sequence.
         DB::statement('CREATE SEQUENCE IF NOT EXISTS global_sid_seq;');
+    }
 
+    /**
+     * @return void
+     */
+    public function registerEvents()
+    {
         // Ensure necessary functions are set up for each migration.
         Event::listen(MigrationsStarted::class, function () {
 

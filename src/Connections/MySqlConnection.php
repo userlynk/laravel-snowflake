@@ -4,23 +4,23 @@ namespace Userlynk\Snowflake\Connections;
 
 class MySqlConnection extends BaseConnection
 {
+    public function registerGrammarMacros(): void
+    {
+        // TODO: Implement registerGrammarMacros() method.
+    }
+
     public function prepareDatabase()
     {
         // TODO: Implement prepareDatabase() method.
     }
 
-    public function registerMacros()
+    public function registerEvents()
     {
-        // TODO: Implement registerMacros() method.
+        // TODO: Implement registerEvents() method.
     }
 
     public function applyTriggers()
     {
         // TODO: Implement applyTriggers() method.
-    }
-
-    public function registerGrammarMacros(): void
-    {
-        // TODO: Implement registerGrammarMacros() method.
     }
 }
