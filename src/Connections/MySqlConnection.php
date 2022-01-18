@@ -2,18 +2,27 @@
 
 namespace Userlynk\Snowflake\Connections;
 
+use Illuminate\Database\Events\MigrationsStarted;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Fluent;
 
 class MySqlConnection extends BaseConnection
 {
     public function prepareDatabase()
     {
-        $this->wrapStatement('DROP FUNCTION IF EXISTS `sid_generator`$$');
+        //
+    }
 
-        $this->wrapStatement('
+    public function registerEvents()
+    {
+        // Ensure necessary functions are set up for each migration.
+        Event::listen(MigrationsStarted::class, function () {
+            $this->wrapStatement('DROP FUNCTION IF EXISTS `sid_generator`$$');
+
+            $this->wrapStatement('
             DELIMITER $$
             CREATE FUNCTION `sid_generator`() RETURNS BIGINT(20)
             DETERMINISTIC
@@ -33,11 +42,7 @@ class MySqlConnection extends BaseConnection
             END$$
             DELIMITER ;
             ');
-    }
-
-    public function registerEvents()
-    {
-        //
+        });
     }
 
     public function registerGrammarMacros(): void
