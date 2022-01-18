@@ -27,7 +27,8 @@ abstract class BaseConnection implements ConnectionInterface
         Blueprint::macro('snowflake', function ($column = 'sid') {
             $column = $this->unsignedBigInteger($column)->unique();
 
-            $this->addCommand('sidTrigger');
+            $this->addCommand('removeSidTrigger');
+            $this->addCommand('addSidTrigger');
 
             return $column;
         });

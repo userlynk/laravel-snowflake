@@ -71,7 +71,14 @@ class PostgresConnection extends BaseConnection
      */
     public function registerGrammarMacros(): void
     {
-        PostgresGrammar::macro('compileSidTrigger', function (Blueprint $blueprint, Fluent $command) {
+        PostgresGrammar::macro('compileRemoveSidTrigger', function (Blueprint $blueprint, Fluent $command) {
+            return sprintf(
+                'drop trigger if exists trigger_set_sid on %s;',
+                $this->wrapTable($blueprint),
+            );
+        });
+
+        PostgresGrammar::macro('compileAddSidTrigger', function (Blueprint $blueprint, Fluent $command) {
             return sprintf(
                 'create trigger trigger_set_sid before insert on %s for each row execute procedure set_sid();',
                 $this->wrapTable($blueprint),

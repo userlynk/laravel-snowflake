@@ -42,7 +42,14 @@ class MySqlConnection extends BaseConnection
 
     public function registerGrammarMacros(): void
     {
-        MySqlGrammar::macro('compileSidTrigger', function (Blueprint $blueprint, Fluent $command) {
+        MySqlGrammar::macro('compileRemoveSidTrigger', function (Blueprint $blueprint, Fluent $command) {
+            return sprintf(
+                'DROP TRIGGER IF EXISTS %;',
+                'trigger_set_sid_'.$blueprint->getTable(),
+            );
+        });
+
+        MySqlGrammar::macro('compileAddSidTrigger', function (Blueprint $blueprint, Fluent $command) {
             return sprintf(
                 '
                 CREATE TRIGGER %s
