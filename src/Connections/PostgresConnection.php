@@ -73,7 +73,7 @@ class PostgresConnection extends BaseConnection
     {
         PostgresGrammar::macro('compileSidTrigger', function (Blueprint $blueprint, Fluent $command) {
             return sprintf(
-                'create trigger trigger_set_sid before insert on %s for each row execute procedure set_sid()',
+                'create trigger trigger_set_sid before insert on %s for each row execute procedure set_sid();',
                 $this->wrapTable($blueprint),
             );
         });
