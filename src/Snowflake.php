@@ -3,6 +3,7 @@
 namespace Userlynk\Snowflake;
 
 use Illuminate\Support\Facades\Facade;
+use Userlynk\Snowflake\Connections\ConnectionInterface;
 
 /**
  * @method static void register(): void
