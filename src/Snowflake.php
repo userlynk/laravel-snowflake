@@ -18,6 +18,6 @@ class Snowflake extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'snowflake';
+        return ConnectionInterface::class;
     }
 }

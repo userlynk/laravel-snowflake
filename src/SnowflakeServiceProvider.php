@@ -4,6 +4,7 @@ namespace Userlynk\Snowflake;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use Userlynk\Snowflake\Connections\ConnectionInterface;
 use Userlynk\Snowflake\Connections\MySqlConnection;
 use Userlynk\Snowflake\Connections\PostgresConnection;
 
@@ -22,7 +23,7 @@ class SnowflakeServiceProvider extends ServiceProvider
     {
         $this->mergeConfig();
 
-        $this->app->singleton('snowflake', function ($app) {
+        $this->app->bind(ConnectionInterface::class, function ($app) {
             return $app['db.connection']->getDriverName() === 'pgsql'
                 ? new PostgresConnection()
                 : new MySqlConnection();
