@@ -17,6 +17,19 @@ class PostgresConnection extends BaseConnection
     public function prepareDatabase()
     {
         DB::statement('CREATE SEQUENCE IF NOT EXISTS global_sid_seq;');
+
+        // Create set_sid() function.
+        DB::statement("
+            CREATE OR REPLACE FUNCTION set_sid()
+                RETURNS TRIGGER
+                LANGUAGE plpgsql AS
+                '
+                BEGIN
+                    NEW.sid = sid_generator();
+                    RETURN NEW;
+                END;
+                ';
+            ");
     }
 
     /**
@@ -49,19 +62,6 @@ class PostgresConnection extends BaseConnection
                 return result;
             END;
             \$BODY\$;
-            ");
-
-            // Create set_sid() function.
-            DB::statement("
-            CREATE OR REPLACE FUNCTION set_sid()
-                RETURNS TRIGGER
-                LANGUAGE plpgsql AS
-                '
-                BEGIN
-                    NEW.sid = sid_generator();
-                    RETURN NEW;
-                END;
-                ';
             ");
         });
     }
