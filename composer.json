@@ -40,7 +40,7 @@
                 "Userlynk\\Snowflake\\SnowflakeServiceProvider"
             ],
             "aliases": {
-                "Snowflake": "Barryvdh\\Debugbar\\Facade"
+                "Snowflake": "Userlynk\\Snowflake\\Snowflake"
             }
         }
     },
