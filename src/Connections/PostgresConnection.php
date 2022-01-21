@@ -37,8 +37,11 @@ class PostgresConnection extends BaseConnection
      */
     public function registerEvents()
     {
-        // Ensure necessary functions are set up for each migration.
+          // Ensure necessary functions are set up for each migration.
         Event::listen(MigrationsStarted::class, function () {
+
+            $shared_id = config('snowflake.shared_id');
+            $epoch_start_of_time = config('snowflake.epoch_start_of_time');
 
             // Create sid_generator() function.
             DB::statement("
@@ -47,10 +50,10 @@ class PostgresConnection extends BaseConnection
                 LANGUAGE 'plpgsql'
             AS \$BODY\$
             DECLARE
-                our_epoch bigint := 1314220021721;
+                our_epoch bigint := {$epoch_start_of_time};
                 seq_id bigint;
                 now_millis bigint;
-                shard_id int := 1;
+                shard_id int := ${shared_id};
                 result bigint:= 0;
             BEGIN
                 SELECT nextval('global_sid_seq') % 1024 INTO seq_id;
