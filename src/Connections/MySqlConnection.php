@@ -20,9 +20,12 @@ class MySqlConnection extends BaseConnection
     {
         // Ensure necessary functions are set up for each migration.
         Event::listen(MigrationsStarted::class, function () {
+            $shared_id = config('snowflake.shared_id');
+            $epoch_start_of_time = config('snowflake.epoch_start_of_time');
+
             $this->wrapStatement('DROP FUNCTION IF EXISTS `sid_generator`$$');
 
-            $this->wrapStatement('
+            $this->wrapStatement("
             DELIMITER $$
             CREATE FUNCTION `sid_generator`() RETURNS BIGINT(20)
             DETERMINISTIC
@@ -33,15 +36,15 @@ class MySqlConnection extends BaseConnection
                 DECLARE incr BIGINT(20);
                 DECLARE schema_node INTEGER default 1;
                 
-                SET node = 1;
+                SET node = ${shared_id};
                 SET current_ms = round(UNIX_TIMESTAMP(CURTIME(4)) * 1000);
-                SET epoch = 1314220021721;
+                SET epoch = {$epoch_start_of_time};
                 
                 SELECT LAST_INSERT_ID() INTO incr;                
                 RETURN (current_ms - epoch) << 22 | (node << 12) | (incr % 4096);
             END$$
             DELIMITER ;
-            ');
+            ");
         });
     }
 
